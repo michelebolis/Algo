@@ -20,13 +20,6 @@ import (
 */
 func main() {
 	board := createBoard()
-	/*
-		fmt.Println(board)
-		for i:=1;i<len(board)+1;i++{
-			fmt.Print(i, " ")
-		}
-		fmt.Println()
-	*/
 	start := 1
 	n_moves, moves := minMovesToWin(board, start, false)
 	fmt.Println("Mosse minime per vincere da", start, ":", n_moves, "; Possibile set di dadi:", moves)
