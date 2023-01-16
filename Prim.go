@@ -16,7 +16,7 @@ func main(){
 	archi["A"]=[]to_arco{to_arco{"B", 17}, to_arco{"D", 25}, to_arco{"C", 28}}
 	archi["B"]=[]to_arco{to_arco{"A", 17}, to_arco{"D", 18}, to_arco{"E", 3}}
 	archi["C"]=[]to_arco{to_arco{"A", 28}, to_arco{"D", 36}, to_arco{"F", 23}}
-	archi["D"]=[]to_arco{to_arco{"B", 16}, to_arco{"A", 25}, to_arco{"C", 36}, to_arco{"F", 1}, to_arco{"G", 4}, to_arco{"E", 9}}
+	archi["D"]=[]to_arco{to_arco{"B", 18}, to_arco{"A", 25}, to_arco{"C", 36}, to_arco{"F", 1}, to_arco{"G", 4}, to_arco{"E", 9}}
 	archi["E"]=[]to_arco{to_arco{"B", 3}, to_arco{"D", 9}, to_arco{"G", 15}}
 	archi["F"]=[]to_arco{to_arco{"C", 23}, to_arco{"G", 20}, to_arco{"D", 1}}
 	archi["G"]=[]to_arco{to_arco{"D", 4}, to_arco{"F", 20}, to_arco{"E", 15}}
@@ -75,32 +75,19 @@ func Prim(grafo map[string]*node, archi map[string][]to_arco)(newGrafo map[strin
 		newGrafo[v]=grafo[v]
 		if d[v]!=math.MaxInt/2{
 			x:=vicino[v]//aggiungo a T il vertice y e l'arco (x, y) con x=vicino[y]
-			/*
-			for index, to_arco:=range archi[x]{
+			for _, to_arco:=range archi[x]{
 				if to_arco.to==v{
-					for index2,to_arco2:=range newArchi[x]{
-						if to_arco2.to==x{
-							newArchi[x][index2]=(archi[x][index])
-						}
-					}
-					
+					newArchi[x]=append(newArchi[x], to_arco)
 					break
 				}
-
 			}
-			*/
 		}
-		for _, to_archi:=range archi[v]{
-			z:=to_archi.to
+		for _, to_arco:=range archi[v]{
+			z:=to_arco.to
 			_, ok:= newGrafo[z]
-			if !ok && to_archi.cost < d[z]{
-				/*
-				d[z] <- w(y, z)
-				C.changeKey(z, w(y, z))
-				vicino[z] <- y
-				*/
-				d[z]=to_archi.cost 
-				coda[find(coda, z)]=to_arco{z,to_archi.cost}
+			if !ok && to_arco.cost < d[z]{
+				d[z]=to_arco.cost 
+				coda[find(coda, z)]=to_arco{z,to_arco.cost}
 				coda=fix(coda, d)
 				vicino[z]=v
 			}

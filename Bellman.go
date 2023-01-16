@@ -40,6 +40,7 @@ func main() {
 func Bellman(grafo map[string]*node, archi map[string][]arco, s string) (d map[string]int, policy map[string]string) {
 	d = make(map[string]int)
 	policy = make(map[string]string)
+	//inizializzo d con infinito tranne per s
 	for key, _ := range grafo {
 		if key != s {
 			d[key] = math.MaxInt / 2
@@ -48,9 +49,9 @@ func Bellman(grafo map[string]*node, archi map[string][]arco, s string) (d map[s
 		}
 	}
 
-	for k := 1; k < len(grafo)-1; k++ {
-		for nodoCorrente, _ := range grafo {
-			for _, arco := range archi[nodoCorrente] {
+	for k := 1; k < len(grafo); k++ {
+		for nodoCorrente, _ := range grafo { //fissato un nodo
+			for _, arco := range archi[nodoCorrente] { //guardo tutti i suoi archi uscenti
 				newD := d[nodoCorrente] + arco.cost
 				if newD < d[arco.to] {
 					d[arco.to] = newD
