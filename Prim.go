@@ -32,62 +32,39 @@ type to_arco struct{
 	to string 
 	cost int 
 }
-
-/*
-ALGORITMO Prim(Grafo G=(V, E, w)) -> Albero
-Sia C una coda con priorità vuota
-Sia d e vicino due array con indici di V
-//Inizialmente
-FOR EACH v appartenente V DO
-	d[v] <- infinito //ogni vertice v ha priorità d[v]=infinito
-	C.insert(v, infinito)
-T <- (vuoto, vuoto)
-
-//ad ogni passo
-DO
-	Y <- C.deleteMin() //preleva vertice y con d[y] minima
-	VT <- VT U {y}
-	IF d[y] != infinito THEN
-		X <- vicino[y] //aggiungo a T il vertice y e l'arco (x, y) con x=vicino[y]
-		ET <- ET U {(x, y)}
-	FOR EACH (y, z) Є E DO
-		IF z !Є VT AND w(y, z) < d[z] THEN
-			d[z] <- w(y, z)
-			C.changeKey(z, w(y, z))
-			vicino[z] <- y
-WHILE C!=vuoto
-RETURN T
-*/
 func Prim(grafo map[string]*node, archi map[string][]to_arco)(newGrafo map[string]*node, newArchi map[string][]to_arco){
 	var coda[]to_arco 
 	d:= make(map[string]int)
 	vicino:=make(map[string]string) 
 	for key,_:=range grafo{
 		d[key]=math.MaxInt/2 
-		coda=append(coda, archi[key]...)
+		coda=append(coda, to_arco{key,d[key]})
 	}
 	newGrafo=make(map[string]*node)
 	newArchi=make(map[string][]to_arco)
-
+	
 	for len(coda)!=0{
-		v:=coda[0].to //y
+		v:=coda[0].to
 		coda=coda[1:]
-		newGrafo[v]=grafo[v]
+		fix(coda, d)
+		newGrafo[v]=grafo[v] //aggiungo a T il vertice y
 		if d[v]!=math.MaxInt/2{
-			x:=vicino[v]//aggiungo a T il vertice y e l'arco (x, y) con x=vicino[y]
-			for _, to_arco:=range archi[x]{
-				if to_arco.to==v{
-					newArchi[x]=append(newArchi[x], to_arco)
+			x:=vicino[v] //aggiungo l'arco (x, y) con x=vicino[y]
+			for _, uscente:=range archi[x]{
+				if uscente.to==v{
+					newArchi[x]=append(newArchi[x], uscente)
+					newArchi[uscente.to]=append(newArchi[uscente.to], to_arco{x, uscente.cost})
 					break
 				}
 			}
 		}
-		for _, to_arco:=range archi[v]{
-			z:=to_arco.to
+		for _, uscente:=range archi[v]{
+			z:=uscente.to
 			_, ok:= newGrafo[z]
-			if !ok && to_arco.cost < d[z]{
-				d[z]=to_arco.cost 
-				coda[find(coda, z)]=to_arco{z,to_arco.cost}
+			if !ok && uscente.cost < d[z]{
+				d[z]=uscente.cost 
+				new_to_arco:=to_arco{z,uscente.cost}
+				coda[find(coda, z)]=new_to_arco
 				coda=fix(coda, d)
 				vicino[z]=v
 			}

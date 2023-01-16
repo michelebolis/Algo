@@ -3,43 +3,30 @@ package main
 import "fmt"
 
 func main() {
-	var h []int
+	
 	//var A []int = []int{1, 2, 5, 10, 3, 7, 11, 15, 17, 20, 9, 15, 8, 16}
 	var A []int = []int{7, 9, 14, 12, 11, 13}
 	for i, j := 0, len(A)-1; i < j; i, j = i+1, j-1 {
 		A[i], A[j] = A[j], A[i]
 	}
 
-	for _, val := range A {
-		h = append(h, val)
-		heapify_up(h)
-	}
 	arrayToHeap(A)
 	fmt.Println("A", A)
 	stampaAlberoASommario(A)
-	fmt.Println(h)
-	stampaAlberoASommario(h)
+	//fmt.Println(h)
+	stampaAlberoASommario(A)
 	fmt.Println()
-	_, h = deleteMin(h)
-	fmt.Println(h)
-	stampaAlberoASommario(h)
+	_, A = deleteMin(A)
+	//fmt.Println(h)
+	stampaAlberoASommario(A)
 }
 func arrayToHeap(A []int) {
 	for j, _ := range A {
-		for {
-			i := (j - 1) / 2             //prendo il padre
-			if i == j || (A[j] > A[i]) { //figlio > padre
-				break //giusto
-			}
-			//vuol dire che padre>figlio, quindi li scambio
-			A[i], A[j] = A[j], A[i]
-			j = i //ora ripartiro esaminando il padre di i
-		}
+		heapify_up(A,j)
 	}
 }
 
-func heapify_up(heap []int) { //lo richiamo se aggiungo in coda allo heap
-	j := len(heap) - 1
+func heapify_up(heap []int, j int) { //lo richiamo se aggiungo in coda allo heap
 	for {
 		i := (j - 1) / 2                   //prendo il padre
 		if i == j || (heap[j] > heap[i]) { //figlio > padre
@@ -50,8 +37,7 @@ func heapify_up(heap []int) { //lo richiamo se aggiungo in coda allo heap
 		j = i //ora ripartiro esaminando il padre di i
 	}
 }
-func down(heap []int) {
-	i := 0
+func down(heap []int, i int) {
 	for {
 		j := 2*i + 1 // left child
 		if j >= len(heap) {
@@ -87,6 +73,6 @@ func deleteMin(h []int) (int, []int) {
 	min := h[0]
 	h[0] = h[len(h)-1]
 	h = h[:len(h)-1]
-	down(h)
+	down(h, 0)
 	return min, h
 }
